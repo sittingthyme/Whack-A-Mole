@@ -176,7 +176,7 @@ const MAX_ACTIVE_MOLES = 1; // Only 1 mole at a time
 let lastMoleTime = 0;
 const MOLE_COOLDOWN = 500;
         
-        // DOM elements
+       
         const gameBoard = document.getElementById('game-board');
         const scoreDisplay = document.getElementById('score-display');
         const timeDisplay = document.getElementById('time-display');
@@ -185,7 +185,7 @@ const MOLE_COOLDOWN = 500;
         const finalScoreDisplay = document.getElementById('final-score');
         const restartBtn = document.getElementById('restart-btn');
         
-        // Create holes
+     
         function createHoles() {
             gameBoard.innerHTML = '';
             holes = [];
@@ -207,14 +207,14 @@ const MOLE_COOLDOWN = 500;
                     index: i
                 });
                 
-                // Add click event to moles
+  
                 mole.addEventListener('click', whackMole);
             }
         }
         
-        // Start the game
-        function startGame() {
-    // Clear any existing mole timer
+     
+    function startGame() {
+
     if (moleTimer) {
         clearTimeout(moleTimer);
     }
@@ -240,36 +240,32 @@ const MOLE_COOLDOWN = 500;
         }
     }, 1000);
     
-    // Start mole popping
+    
     popRandomMoleWithDelay();
 }
 
-    // Pop up a random mole with proper timing
+   
     function popRandomMoleWithDelay() {
     if (!gameActive) return;
     
     const now = Date.now();
     
-    // First check if any moles have exceeded their display time
+  
     holes.forEach(hole => {
         if (hole.isUp && now - hole.showTime >= hole.visibleDuration) {
             hideMole(hole);
         }
     });
     
-    // Don't show new mole if:
-    // - We already have max active moles
-    // - Not enough time has passed since last mole
+
     if (activeMoles >= MAX_ACTIVE_MOLES || now - lastMoleTime < MOLE_COOLDOWN) {
         setTimeout(popRandomMoleWithDelay, 100);
         return;
     }
     
-    // Get random visible time for this mole (800-1500ms)
     const visibleDuration = MOLE_MIN_VISIBLE_TIME + 
                          Math.random() * (MOLE_MAX_VISIBLE_TIME - MOLE_MIN_VISIBLE_TIME);
     
-    // Get random hole that doesn't currently have a mole
     const availableHoles = holes.filter(hole => !hole.isUp);
     if (availableHoles.length === 0) {
         setTimeout(popRandomMoleWithDelay, 100);
@@ -282,11 +278,9 @@ const MOLE_COOLDOWN = 500;
     showMole(mole, visibleDuration);
     lastMoleTime = now;
     
-    // Schedule next mole appearance
     setTimeout(popRandomMoleWithDelay, MOLE_INTERVAL);
 }
 
-// New helper functions
 function showMole(mole, duration) {
     mole.element.classList.add('up');
     mole.isUp = true;
@@ -302,7 +296,6 @@ function hideMole(mole) {
 }
 
 
-// Update the whackMole function
 function whackMole(e) {
     if (!gameActive) return;
     
@@ -310,32 +303,28 @@ function whackMole(e) {
     const mole = holes[moleIndex];
     
     if (mole.isUp) {
-        // Add hit effect
         e.target.classList.add('mole-hit');
         setTimeout(() => {
             e.target.classList.remove('mole-hit');
         }, 200);
-        
-        // Hide the mole immediately when whacked
+      
         hideMole(mole);
         
-        // Increase score
         score++;
         scoreDisplay.textContent = `Score: ${score}`;
     }
 }
         
-        // End the game
+
         function endGame() {
     gameActive = false;
     clearInterval(timer);
-    
-    // Clear any pending mole timeouts
+
     if (moleTimer) {
         clearTimeout(moleTimer);
     }
     
-    // Hide all moles immediately
+
     holes.forEach(hole => {
         if (hole.isUp) {
             hole.element.classList.remove('up');
@@ -343,30 +332,29 @@ function whackMole(e) {
         }
     });
     
-    activeMoles = 0; // Reset active mole count
-    
-    // Show game over screen
+    activeMoles = 0; 
+
     finalScoreDisplay.textContent = `Final Score: ${score}`;
     gameOverScreen.style.display = 'flex';
 }
-        // Restart game
+
         function restartGame() {
-    // Hide game over screen
+
     gameOverScreen.style.display = 'none';
     
-    // Reset all game state
+
     score = 0;
     activeMoles = 0;
     lastMoleTime = 0;
     
-    // Update displays
+
     scoreDisplay.textContent = `Score: ${score}`;
     timeDisplay.textContent = `Time: 30`;
     
-    // Re-enable start button
+
     startBtn.disabled = false;
     
-    // Clear any existing moles
+
     holes.forEach(hole => {
         hole.element.classList.remove('up');
         hole.isUp = false;
@@ -374,11 +362,11 @@ function whackMole(e) {
 }
 
         
-        // Event listeners
+
         startBtn.addEventListener('click', startGame);
         restartBtn.addEventListener('click', restartGame);
         
-        // Initialize the game
+
         createHoles();
     </script>
 </body>
